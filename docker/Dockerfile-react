@@ -1,0 +1,15 @@
+# Build step
+FROM node:8.10-alpine AS build
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+COPY ./app ./
+RUN npm i
+
+# Final step
+FROM node:8.10-alpine
+# Get files from build step
+COPY --from=build /usr/src/app /
+# Define app as workdir
+WORKDIR /react-graphql
+# Export app port
+EXPOSE 3000

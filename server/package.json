@@ -1,0 +1,15 @@
+{
+  "name": "graphqlsrv",
+  "description": "GraphQL server",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "NODE_ENV=development ./node_modules/nodemon/bin/nodemon.js ./server.js"
+  },
+  "dependencies": {
+    "express": "4.16.3",
+    "apollo-server-express": "1.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "1.17.2"
+  }
+}

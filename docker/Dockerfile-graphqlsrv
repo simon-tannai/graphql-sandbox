@@ -1,0 +1,20 @@
+# Build step
+FROM node:8.10-alpine AS build
+# Create futur workdir
+RUN mkdir -p /usr/src/server
+# Define workdir
+WORKDIR /usr/src/server
+# Copy server sources files
+COPY ./server ./
+# Install dependencies
+RUN npm i
+
+# Final step
+FROM node:8.10-alpine
+# Get files from build step
+COPY --from=build /usr/src/ /
+# Define server as workdir
+WORKDIR /server
+# Expose server port
+EXPOSE 8080
+RUN ls ./

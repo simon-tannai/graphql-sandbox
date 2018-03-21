@@ -1,0 +1,42 @@
+version: "3.3"
+
+services:
+  graphqlsrv:
+    build:
+      context: ./../
+      dockerfile: ./docker/Dockerfile-graphqlsrv
+    container_name: graphqlsrv
+    command: npm run dev
+    volumes:
+      - ./../server:/server
+      - /server/node_modules
+    ports:
+      - "9000:8080"
+    networks:
+      graphql:
+        aliases:
+          - graphqlsrv
+  react:
+    build:
+      context: ./../
+      dockerfile: ./docker/Dockerfile-react
+    container_name: react
+    command: npm start
+    volumes:
+      - ./../app:/react-graphql
+      - /react-graphql/node_modules
+    ports:
+      - "8000:3000"
+    networks:
+      graphql:
+        aliases:
+          - react
+networks:
+  # CREATE KERING NETWORK
+  graphql:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      -
+        subnet: 175.20.20.0/16
