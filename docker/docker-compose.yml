@@ -16,6 +16,7 @@ services:
       graphql:
         aliases:
           - graphqlsrv
+
   react:
     build:
       context: ./../
@@ -31,6 +32,16 @@ services:
       graphql:
         aliases:
           - react
+
+  mongodb:
+    image: mongo:3.7.3-jessie
+    container_name: mongodb
+    ports:
+       - "9500:27017"
+    networks:
+      graphql:
+        aliases:
+          - mongodb
 networks:
   # CREATE KERING NETWORK
   graphql:
