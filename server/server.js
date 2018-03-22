@@ -8,32 +8,33 @@ const mongo = require(path.join(__dirname, 'bundles', 'mongo', 'mongo.js'))
 const pokemon = require(path.join(__dirname, 'bundles', 'mongo', 'models', 'pokemon.js'))
 
 mongo.connect()
-pokemon.find()
-.then((pokemons) => {
-  console.log(pokemons)
-})
-
-// Some fake data
-const books = [
-  {
-    title: "Harry Potter and the Sorcerer's stone",
-    author: 'J.K. Rowling',
-  },
-  {
-    title: 'Jurassic Park',
-    author: 'Michael Crichton',
-  },
-]
 
 // The GraphQL schema in string form
 const typeDefs = `
-  type Query { books: [Book] }
-  type Book { title: String, author: String }
+  type Query { pokemons: [Pokemon] }
+  type Pokemon {
+    _id: String
+    abilities: [String],
+    detailPageURL: String,
+    weight: Int,
+    weakness: [String],
+    number: String,
+    height: Int,
+    collectibles_slug: String,
+    featured: Boolean,
+    slug: String,
+    name: String,
+    ThumbnailAltText: String,
+    ThumbnailImage: String,
+    type: [String],
+  }
 `
 
 // The resolvers
 const resolvers = {
-  Query: { books: () => books },
+  Query: { pokemons: async () => {
+    return pokemon.find()
+  } },
 }
 
 // Put together a schema
