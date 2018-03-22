@@ -1,7 +1,17 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+const path = require('path')
 const { graphqlExpress, graphiqlExpress } = require('apollo-server-express')
 const { makeExecutableSchema } = require('graphql-tools')
+
+const mongo = require(path.join(__dirname, 'bundles', 'mongo', 'mongo.js'))
+const pokemon = require(path.join(__dirname, 'bundles', 'mongo', 'models', 'pokemon.js'))
+
+mongo.connect()
+pokemon.find()
+.then((pokemons) => {
+  console.log(pokemons)
+})
 
 // Some fake data
 const books = [

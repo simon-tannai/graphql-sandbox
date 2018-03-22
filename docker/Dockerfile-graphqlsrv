@@ -17,4 +17,3 @@ COPY --from=build /usr/src/ /
 WORKDIR /server
 # Expose server port
 EXPOSE 8080
-RUN ls ./

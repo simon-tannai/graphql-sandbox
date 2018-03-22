@@ -33,15 +33,29 @@ services:
         aliases:
           - react
 
-  mongodb:
+  mongo:
     image: mongo:3.7.3-jessie
-    container_name: mongodb
+    container_name: mongo
     ports:
        - "9500:27017"
     networks:
       graphql:
         aliases:
-          - mongodb
+          - mongo
+
+  mongoseed:
+    build:
+      context: ./../
+      dockerfile: docker/Dockerfile-mongoseed
+    container_name: mongoseed
+    depends_on:
+      - mongo
+    command: 'bash -c "mongoimport --host mongo:27017 --db graphql --type json --file /seed-data/pokemons.json --jsonArray"'
+    networks:
+      graphql:
+        aliases:
+          - mongoseed
+
 networks:
   # CREATE KERING NETWORK
   graphql:
