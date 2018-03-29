@@ -2,13 +2,24 @@ const graphql = require('graphql')
 const path = require('path')
 const pokemonModel = require(path.join(__dirname, '..', 'mongo', 'models', 'pokemon.js'))
 
+const floatType = new graphql.GraphQLScalarType({
+  name: 'FloatType',
+  serialize: (value) => {
+    if (parseFloat(value) && !isNaN(parseFloat(value))) {
+      return value
+    }
+
+    return null
+  },
+})
+
 const pokemonType = new graphql.GraphQLObjectType({
   name: 'Pokemon',
   fields: {
     _id: {type: graphql.GraphQLString},
     abilities: {type: graphql.GraphQLList(graphql.GraphQLString)},
     detailPageURL: {type: graphql.GraphQLString},
-    weight: {type: graphql.GraphQLInt},
+    weight: {type: graphql.GraphQLFloat},
     weakness: {type: graphql.GraphQLList(graphql.GraphQLString)},
     number: {type: graphql.GraphQLString},
     height: {type: graphql.GraphQLInt},
@@ -22,39 +33,30 @@ const pokemonType = new graphql.GraphQLObjectType({
   }
 })
 
-const allPokemonsQuery = queryType = new graphql.GraphQLObjectType({
-  name: 'Query',
-  fields: {
-    allPokemons: {
-      type: graphql.GraphQLList(pokemonType),
-      resolve: () => {
-        return pokemonModel.find()
-      }
-    }
-  }
-})
-
-const pokemonQuery = new graphql.GraphQLObjectType({
-  name: 'Query',
-  fields: {
-    pokemon: {
-      type: pokemonType,
-      args: {
-        filter: { type: graphql.GraphQLObjectType }
-      },
-      resolve: (_, {filter}) => {
-        return pokemonModel.find(filter)
-      }
-    }
-  }
-})
-
 const schema = new graphql.GraphQLSchema({
   query: new graphql.GraphQLObjectType({
     name: 'Query',
     fields: {
-      allPokemonsQuery,
-      pokemonQuery,
+      allPokemons: {
+        type: graphql.GraphQLList(pokemonType),
+        resolve: () => {
+          return pokemonModel.find()
+        }
+      },
+      pokemonByName: {
+        type: pokemonType,
+        args: {
+          pokemonName: {
+            type: graphql.GraphQLString
+          },
+        },
+        resolve: (root, {pokemonName}) => {
+          const pokemon = pokemonModel.findOne({'name': pokemonName})
+
+          console.log(pokemon)
+          return pokemon
+        }
+      }
     },
   })
 })

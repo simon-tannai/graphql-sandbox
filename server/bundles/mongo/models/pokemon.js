@@ -31,4 +31,6 @@ const PokemonSchema = new Schema({
   timestamps: true,
 })
 
+PokemonSchema.set('toJSON', { getters: true, virtuals: false })
+
 module.exports = mongoose.model('Pokemon', PokemonSchema)
